@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    table { margin: 20px auto; border-collapse: collapse; }
+    td {
+      width: 60px; height: 60px;
+      text-align: center; font-size: 24px;
+      border: 2px solid #333; cursor: pointer;
+    }
+    #status { margin-top: 20px; font-size: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <table id="board"></table>
+  <div id="status">Player X's turn</div>
+
+  <script>
+    let board = [["","",""],["","",""],["","",""]];
+    let currentPlayer = "X";
+
+    function renderBoard() {
+      const table = document.getElementById("board");
+      table.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < 3; j++) {
+          const cell = document.createElement("td");
+          cell.textContent = board[i][j];
+          cell.onclick = () => makeMove(i, j);
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+    }
+
+    function makeMove(i, j) {
+      if (board[i][j] !== "") return;
+      board[i][j] = currentPlayer;
+      renderBoard();
+      if (checkWin(currentPlayer)) {
+        document.getElementById("status").textContent = `Player ${currentPlayer} wins!`;
+        return;
+      }
+      if (isDraw()) {
+        document.getElementById("status").textContent = "It's a draw!";
+        return;
+      }
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      document.getElementById("status").textContent = `Player ${currentPlayer}'s turn`;
+    }
+
+    function checkWin(player) {
+      for (let i = 0; i < 3; i++) {
+        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) return true;
+        if (board[0][i] === player && board[1][i] === player && board[2][i] === player) return true;
+      }
+      if (board[0][0] === player && board[1][1] === player && board[2][2] === player) return true;
+      if (board[0][2] === player && board[1][1] === player && board[2][0] === player) return true;
+      return false;
+    }
+
+    function isDraw() {
+      return board.flat().every(cell => cell !== "");
+    }
+
+    renderBoard();
+  </script>
+</body>
+</html>
